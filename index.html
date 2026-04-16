@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifetoon | 寫自己的故事，做自己的讀者</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config for Manga Aesthetic -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        manga: {
+                            yellow: '#FFDF00',
+                            black: '#0A0A0A',
+                            white: '#FAFAFA',
+                            gray: '#E5E5E5'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        display: ['Oswald', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'manga': '8px 8px 0px 0px rgba(10,10,10,1)',
+                        'manga-sm': '4px 4px 0px 0px rgba(10,10,10,1)',
+                        'manga-hover': '12px 12px 0px 0px rgba(10,10,10,1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <!-- Custom CSS for Manga Elements & Interactions -->
+    <style>
+        :root {
+            cursor: none;
+        }
+        
+        body {
+            background-color: #FAFAFA;
+            color: #0A0A0A;
+            overflow-x: hidden;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 24px;
+            height: 24px;
+            background-color: #FFDF00;
+            border: 2px solid #0A0A0A;
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        .cursor-dot.active {
+            width: 60px;
+            height: 60px;
+            background-color: #fff;
+        }
+
+        /* Manga Halftone Texture */
+        .bg-halftone {
+            background-image: radial-gradient(#0A0A0A 15%, transparent 16%), radial-gradient(#0A0A0A 15%, transparent 16%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.05;
+        }
+        
+        .bg-halftone-yellow {
+            background-image: radial-gradient(#FFDF00 20%, transparent 20%);
+            background-size: 16px 16px;
+        }
+
+        /* Manga Borders & Components */
+        .manga-border {
+            border: 4px solid #0A0A0A;
+        }
+        
+        .manga-panel {
+            background: #FAFAFA;
+            border: 4px solid #0A0A0A;
+            box-shadow: 8px 8px 0px 0px #0A0A0A;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+        }
+        
+        .manga-panel:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px 0px #0A0A0A;
+        }
+
+        /* Vertical Text Clipping */
+        .clip-container {
+            overflow: hidden;
+            line-height: 1.1;
+        }
+        .clip-text {
+            display: block;
+            transform: translateY(100%);
+        }
+
+        /* Infinite Marquee */
+        .marquee-wrapper {
+            overflow: hidden;
+            white-space: nowrap;
+            display: flex;
+            border-top: 4px solid #0A0A0A;
+            border-bottom: 4px solid #0A0A0A;
+            background-color: #FFDF00;
+            padding: 1rem 0;
+        }
+        .marquee-content {
+            display: flex;
+            gap: 2rem;
+            animation: scroll 15s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Video Card Text Expansion */
+        .video-text {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+        }
+        .video-card.expanded .video-text {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-manga-yellow selection:text-manga-black relative">
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursor"></div>
+
+    <!-- Background Halftone Overlay -->
+    <div class="fixed inset-0 bg-halftone pointer-events-none z-[-1]"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-manga-white manga-border border-t-0 border-l-0 border-r-0 flex justify-between items-center p-4 md:px-8">
+        <a href="#hero" class="font-display font-bold text-3xl tracking-tighter uppercase cursor-pointer hover:text-manga-yellow transition-colors">Lifetoon</a>
+        
+        <!-- Desktop Quick Links -->
+        <div class="hidden lg:flex items-center gap-2 font-display font-bold uppercase tracking-widest text-sm">
+            <a href="#philosophy" class="cursor-pointer hover:bg-manga-black hover:text-manga-yellow px-4 py-2 transition-colors manga-border border-transparent hover:border-manga-black">Philosophy</a>
+            <a href="#features" class="cursor-pointer hover:bg-manga-black hover:text-manga-yellow px-4 py-2 transition-colors manga-border border-transparent hover:border-manga-black">Features</a>
+            <a href="#videos" class="cursor-pointer hover:bg-manga-black hover:text-manga-yellow px-4 py-2 transition-colors manga-border border-transparent hover:border-manga-black">Episodes</a>
+            <a href="#exhibition" class="cursor-pointer hover:bg-manga-black hover:text-manga-yellow px-4 py-2 transition-colors manga-border border-transparent hover:border-manga-black">Exhibition</a>
+        </div>
+
+        <div class="flex gap-4">
+            <a href="#newsletter" class="magnetic-btn hidden md:flex items-center gap-2 bg-manga-yellow manga-border px-6 py-2 font-bold uppercase text-sm hover:bg-manga-black hover:text-manga-yellow transition-colors duration-300">
+                Subscribe <iconify-icon icon="solar:letter-bold"></iconify-icon>
+            </a>
+            <a href="#" class="magnetic-btn flex items-center justify-center w-10 h-10 bg-manga-black text-manga-yellow rounded-full hover:scale-110 transition-transform">
+                <iconify-icon icon="mdi:instagram" width="24"></iconify-icon>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen pt-24 px-4 md:px-8 flex flex-col justify-center relative overflow-hidden">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-12 mb-20">
+            
+            <div class="lg:col-span-7 z-10">
+                <div class="inline-block bg-manga-yellow manga-border px-4 py-1 mb-6 font-bold tracking-widest text-sm transform -rotate-2">
+                    青少年自我認同探索 APP
+                </div>
+                
+                <h1 class="text-6xl md:text-8xl lg:text-9xl font-display font-black uppercase mb-6 leading-none">
+                    <div class="clip-container"><span class="clip-text">Write</span></div>
+                    <div class="clip-container"><span class="clip-text text-transparent" style="-webkit-text-stroke: 3px #0A0A0A;">Your</span></div>
+                    <div class="clip-container"><span class="clip-text">Story</span></div>
+                </h1>
+                
+                <p class="text-2xl md:text-3xl font-bold mb-8 gs-reveal">
+                    寫自己的故事，<br><span class="text-manga-yellow bg-manga-black px-2">做自己的讀者。</span>
+                </p>
+            </div>
+
+            <div class="lg:col-span-5 relative gs-reveal h-[60vh] lg:h-[80vh] flex items-center justify-center">
+                <!-- Background decorative shapes -->
+                <div class="absolute w-full h-[80%] bg-halftone-yellow opacity-40 rounded-full blur-2xl animate-pulse z-0"></div>
+                
+                <!-- 1:1 Image Placeholder (No border, no shadow) -->
+                <div class="relative w-full max-w-[400px] aspect-[4/3] overflow-hidden z-10 group">
+                    <img src="https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Lifetoon Feature Image" class="w-full h-full object-cover transition-all duration-700">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infinite Marquee -->
+    <div class="marquee-wrapper rotate-[-1deg] scale-105 z-20 relative shadow-manga my-12">
+        <div class="marquee-content font-display font-black text-4xl uppercase tracking-widest text-manga-black">
+            <span>STORY IN PROGRESS</span> ✦ <span>IDENTITY EXPLORATION</span> ✦ <span>AI COMPANION</span> ✦ <span>MANGA GENERATION</span> ✦ 
+            <span>STORY IN PROGRESS</span> ✦ <span>IDENTITY EXPLORATION</span> ✦ <span>AI COMPANION</span> ✦ <span>MANGA GENERATION</span> ✦ 
+            <span>STORY IN PROGRESS</span> ✦ <span>IDENTITY EXPLORATION</span> ✦ <span>AI COMPANION</span> ✦ <span>MANGA GENERATION</span> ✦ 
+        </div>
+    </div>
+
+    <!-- Philosophy Section -->
+    <section id="philosophy" class="py-24 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gs-reveal">
+            <div>
+                <h2 class="text-5xl md:text-7xl font-display font-black uppercase mb-4">Philosophy</h2>
+                <h3 class="text-2xl font-bold border-l-8 border-manga-yellow pl-4">在成長的夾縫中，不再迷惘。</h3>
+            </div>
+            <p class="text-lg font-medium mt-6 md:mt-0 max-w-md bg-manga-white manga-border p-4 shadow-manga-sm">
+                青春期是建立自我認同的關鍵階段。Lifetoon 讓內心的迷惘與成長點滴具象化，透過多元AI技術，打造前所未有的客製化沉浸體驗。
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Value 1 -->
+            <div class="manga-panel p-8 gs-reveal flex flex-col h-full relative overflow-hidden group">
+                <div class="absolute -right-10 -top-10 text-manga-yellow opacity-20 group-hover:opacity-100 transition-opacity">
+                    <iconify-icon icon="solar:cpu-bold" width="150"></iconify-icon>
+                </div>
+                <div class="text-6xl font-display font-black text-manga-gray mb-4">01</div>
+                <h4 class="text-2xl font-bold mb-4 z-10">數位陪伴<br>Digital Companion</h4>
+                <p class="font-medium z-10 mt-auto">AI 化身傾聽者，分析日常對話中的情緒，幫助青少年探索自己真正在意的事物。</p>
+            </div>
+            
+            <!-- Value 2 -->
+            <div class="manga-panel p-8 gs-reveal flex flex-col h-full bg-manga-black text-manga-white relative overflow-hidden group">
+                <div class="absolute inset-0 bg-halftone opacity-10"></div>
+                <div class="text-6xl font-display font-black text-zinc-800 mb-4 z-10">02</div>
+                <h4 class="text-2xl font-bold mb-4 z-10 text-manga-yellow">漫畫轉譯<br>Manga Translation</h4>
+                <p class="font-medium z-10 mt-auto">將日常瑣碎與挑戰，轉化為具強烈視覺張力的敘事漫畫，藉由第三人稱視角重新檢視經歷。</p>
+            </div>
+
+            <!-- Value 3 -->
+            <div class="manga-panel p-8 gs-reveal flex flex-col h-full relative overflow-hidden group">
+                <div class="absolute -right-10 -top-10 text-manga-yellow opacity-20 group-hover:opacity-100 transition-opacity">
+                    <iconify-icon icon="solar:compass-square-bold" width="150"></iconify-icon>
+                </div>
+                <div class="text-6xl font-display font-black text-manga-gray mb-4">03</div>
+                <h4 class="text-2xl font-bold mb-4 z-10">探索任務化<br>Quest & Identity</h4>
+                <p class="font-medium z-10 mt-auto">將抽象的自我探索轉化為看得見的成就。從對話中配對成長任務，累積自信與社交能力。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-manga-black text-manga-white border-y-8 border-manga-yellow relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1558244402-286dd748c593?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] opacity-10 bg-cover bg-center filter grayscale"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+            <div class="text-center mb-20 gs-reveal">
+                <h2 class="text-6xl md:text-8xl font-display font-black uppercase text-transparent mb-4" style="-webkit-text-stroke: 2px #FFDF00;">Features</h2>
+                <div class="inline-block bg-manga-yellow text-manga-black font-bold px-6 py-2 text-2xl transform rotate-2">系統啟動中...</div>
+            </div>
+
+            <div class="space-y-24">
+                <!-- Feature A -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 md:order-1 gs-reveal">
+                        <div class="flex items-center gap-4 mb-4">
+                            <iconify-icon icon="solar:ghost-bold" class="text-4xl text-manga-yellow"></iconify-icon>
+                            <h3 class="text-4xl font-bold">內心的小怪獸：故事獸</h3>
+                        </div>
+                        <p class="text-xl mb-6 text-gray-300">將個人特質形象化。「故事獸」以故事為食，與人類共生。隨著你紀錄的故事越多，牠們會長出與你心理傾向相符的特徵（顏色、斑點），成為你最忠實的倒影。</p>
+                        <ul class="space-y-2 font-bold text-manga-yellow">
+                            <li>✦ 定時餵食故事果實培養感情</li>
+                            <li>✦ 許願餐點推動劇情火花</li>
+                        </ul>
+                    </div>
+                    <div class="order-1 md:order-2 manga-panel p-2 transform rotate-2 gs-reveal bg-manga-white">
+                        <img src="https://images.unsplash.com/photo-1601814933824-fd0b574dd592?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Monster illustration style" class="w-full aspect-[4/3] object-cover">
+                    </div>
+                </div>
+
+                <!-- Feature B -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="manga-panel p-2 transform -rotate-2 gs-reveal bg-manga-white">
+                        <img src="https://images.unsplash.com/photo-1455390582262-044cdead2708?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Manga writing" class="w-full aspect-[4/3] object-cover">
+                    </div>
+                    <div class="gs-reveal">
+                        <div class="flex items-center gap-4 mb-4">
+                            <iconify-icon icon="solar:map-arrow-up-bold" class="text-4xl text-manga-yellow"></iconify-icon>
+                            <h3 class="text-4xl font-bold">抽絲剝繭：願望菜單</h3>
+                        </div>
+                        <p class="text-xl mb-6 text-gray-300">看見的成就，重新定義成功。AI 分析對話找出探索線索，將挑戰變成破關任務。例如：「練習說話時與人對視10秒」，將你的迷惘轉化為行動。</p>
+                        <div class="bg-zinc-900 border-l-4 border-manga-yellow p-4 text-sm font-mono mt-4">
+                            > SYSTEM: 發現社交焦慮跡象...<br>
+                            > 生成任務 [果實：閱讀10則冷笑話]<br>
+                            > 狀態：等待接受
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 新增功能介紹 C (佔位符) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 md:order-1 gs-reveal">
+                        <div class="flex items-center gap-4 mb-4">
+                            <iconify-icon icon="solar:star-fall-2-bold" class="text-4xl text-manga-yellow"></iconify-icon>
+                            <h3 class="text-4xl font-bold">全新功能探索區塊一</h3>
+                        </div>
+                        <p class="text-xl mb-6 text-gray-300">這是一段暫時的替代文字，用來展示未來即將新增的功能介紹內容。可以想像這裡有一段非常吸引人的描述，詳細解說這項新功能的獨特之處與使用者情境。</p>
+                        <ul class="space-y-2 font-bold text-manga-yellow">
+                            <li>✦ 預期新增的功能亮點說明一</li>
+                            <li>✦ 預期新增的功能亮點說明二</li>
+                        </ul>
+                    </div>
+                    <div class="order-1 md:order-2 manga-panel p-2 transform rotate-2 gs-reveal bg-manga-white">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Placeholder Feature 1" class="w-full aspect-[4/3] object-cover">
+                    </div>
+                </div>
+
+                <!-- 新增功能介紹 D (佔位符) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="manga-panel p-2 transform -rotate-2 gs-reveal bg-manga-white">
+                        <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Placeholder Feature 2" class="w-full aspect-[4/3] object-cover">
+                    </div>
+                    <div class="gs-reveal">
+                        <div class="flex items-center gap-4 mb-4">
+                            <iconify-icon icon="solar:magic-stick-3-bold" class="text-4xl text-manga-yellow"></iconify-icon>
+                            <h3 class="text-4xl font-bold">全新功能探索區塊二</h3>
+                        </div>
+                        <p class="text-xl mb-6 text-gray-300">這是第二段暫時的替代文字。當有正式內容與圖片時，便可以直接替換這裡的資訊。延續交錯排版的方式，能保持網頁閱讀的節奏感與視覺趣味性。</p>
+                        <div class="bg-zinc-900 border-l-4 border-manga-yellow p-4 text-sm font-mono mt-4">
+                            > SYSTEM: 隱藏功能建置中...<br>
+                            > 載入進度：[████░░░░░░] 40%<br>
+                            > 狀態：等待資料更新
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature E: Scenario YouTube Video Embed -->
+                <div class="gs-reveal relative mt-24">
+                    <div class="manga-panel p-6 md:p-8 bg-manga-white text-manga-black relative z-10">
+                        <!-- Tape/Badge Decoration -->
+                        <div class="absolute -top-5 -left-2 md:-left-5 bg-manga-yellow manga-border px-6 py-2 font-display font-black text-xl uppercase tracking-widest transform -rotate-3 shadow-manga-sm">
+                            Showcase
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch pt-4">
+                            <!-- Text Intro -->
+                            <div class="lg:col-span-5 flex flex-col justify-center">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <iconify-icon icon="solar:clapperboard-play-bold" class="text-4xl text-manga-black"></iconify-icon>
+                                    <h3 class="text-3xl font-bold">使用情境展示</h3>
+                                </div>
+                                <div class="bg-manga-gray p-5 manga-border relative text-sm md:text-base font-medium leading-relaxed">
+                                    <iconify-icon icon="solar:quote-left-bold" class="text-2xl text-manga-yellow absolute -top-3 -left-3 bg-manga-black rounded-full p-1 border-2 border-white"></iconify-icon>
+                                    小文過去一直是班上的小透明，個性低調、嗓門小，在同學眼中就是個話少的普通女孩，但內心其實有個渴望與人交流、被看見的靈魂...<br><br>今天是小文轉學的第一天，究竟 Lifetoon 能否為她的新生活激起意想不到的驚喜呢？
+                                </div>
+                            </div>
+                            
+                            <!-- Video Embed -->
+                            <div class="lg:col-span-7 relative flex flex-col">
+                                <div class="absolute inset-0 bg-manga-black manga-border transform translate-x-3 translate-y-3 md:translate-x-4 md:translate-y-4"></div>
+                                <div class="aspect-video manga-border bg-black relative z-10 overflow-hidden w-full h-full flex-grow">
+                                    <iframe 
+                                        class="w-full h-full absolute top-0 left-0" 
+                                        src="https://www.youtube.com/embed/p39nlLqjZIU?si=t5oRz3U_NlM1JzQd" 
+                                        title="Lifetoon 情境展示" 
+                                        frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- YouTube Ads / Video Section -->
+    <section id="videos" class="py-24 max-w-7xl mx-auto px-4 md:px-8">
+        <div class="flex justify-between items-end mb-12 gs-reveal">
+            <div>
+                <h2 class="text-5xl md:text-7xl font-display font-black uppercase mb-2">Episodes</h2>
+                <h3 class="text-2xl font-bold bg-manga-black text-manga-white inline-block px-4 py-1">產品概念影片</h3>
+            </div>
+        </div>
+
+        <!-- Responsive Grid Container for Videos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12 gs-reveal items-start">
+            
+            <!-- Video Item 1 -->
+            <div class="video-card manga-panel cursor-pointer w-full bg-white" onclick="this.classList.toggle('expanded')">
+                <div class="relative overflow-hidden h-56 border-b-4 border-manga-black group bg-black">
+                    <iframe 
+                        class="w-full h-full absolute top-0 left-0" 
+                        src="https://www.youtube.com/embed/8bxGjyZji4I?si=W88v6ZcQWq_X1p_u" 
+                        title="《小文篇》轉學的第一天" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                    <!-- 標籤浮動於影片上層 (pointer-events-none 確保不干擾點擊影片) -->
+                    <div class="absolute top-2 left-2 bg-manga-yellow text-manga-black font-bold px-2 py-1 text-xs border-2 border-black pointer-events-none">EP. 01</div>
+                </div>
+                <div class="p-4">
+                    <h4 class="font-bold text-xl mb-2 flex justify-between items-center">
+                        《小文篇》轉學的第一天
+                        <iconify-icon icon="solar:alt-arrow-down-bold" class="text-gray-400"></iconify-icon>
+                    </h4>
+                    <div class="video-text text-sm font-medium text-gray-700">
+                        <p class="mb-4">小文過去一直是班上的小透明，個性低調、嗓門小。今天是小文轉學的第一天，究竟 Lifetoon 能否為她的新生活激起意想不到的驚喜？</p>
+                        <a href="episode_wen.html" class="inline-block bg-manga-black text-white px-4 py-2 font-bold text-xs hover:bg-manga-yellow hover:text-black transition-colors manga-border border-2">Read More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Item 2 -->
+            <div class="video-card manga-panel cursor-pointer w-full bg-white" onclick="this.classList.toggle('expanded')">
+                <div class="relative overflow-hidden h-56 border-b-4 border-manga-black group bg-black">
+                    <iframe 
+                        class="w-full h-full absolute top-0 left-0" 
+                        src="https://www.youtube.com/embed/8bxGjyZji4I?si=W88v6ZcQWq_X1p_u" 
+                        title="《晴天篇》是心動還是心悸" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                    <!-- 標籤浮動於影片上層 (pointer-events-none 確保不干擾點擊影片) -->
+                    <div class="absolute top-2 left-2 bg-manga-yellow text-manga-black font-bold px-2 py-1 text-xs border-2 border-black pointer-events-none">EP. 02</div>
+                </div>
+                <div class="p-4">
+                    <h4 class="font-bold text-xl mb-2 flex justify-between items-center">
+                        《晴天篇》是心動還是心悸 
+                        <iconify-icon icon="solar:alt-arrow-down-bold" class="text-gray-400"></iconify-icon>
+                    </h4>
+                    <div class="video-text text-sm font-medium text-gray-700">
+                        <p class="mb-4">透過記錄日常的對話，系統偵測到隱藏的情緒特徵，屬於你的專屬夥伴即將破殼而出。來看看AI如何具象化內心深處的渴望。</p>
+                        <a href="#" class="inline-block bg-manga-black text-white px-4 py-2 font-bold text-xs hover:bg-manga-yellow hover:text-black transition-colors manga-border border-2">Read More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Item 3 -->
+            <div class="video-card manga-panel cursor-pointer w-full bg-white" onclick="this.classList.toggle('expanded')">
+                <div class="relative overflow-hidden h-56 border-b-4 border-manga-black group bg-black">
+                    <iframe 
+                        class="w-full h-full absolute top-0 left-0" 
+                        src="https://www.youtube.com/embed/8bxGjyZji4I?si=W88v6ZcQWq_X1p_u" 
+                        title="《米米篇》無聊的人生?" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                    <!-- 標籤浮動於影片上層 (pointer-events-none 確保不干擾點擊影片) -->
+                    <div class="absolute top-2 left-2 bg-manga-yellow text-manga-black font-bold px-2 py-1 text-xs border-2 border-black pointer-events-none">EP. 03</div>
+                </div>
+                <div class="p-4">
+                    <h4 class="font-bold text-xl mb-2 flex justify-between items-center">
+                        《米米篇》無聊的人生?
+                        <iconify-icon icon="solar:alt-arrow-down-bold" class="text-gray-400"></iconify-icon>
+                    </h4>
+                    <div class="video-text text-sm font-medium text-gray-700">
+                        <p class="mb-4">不想被定義，卻又不知如何改變？看看小主角如何透過完成「每日特餐」挑戰，逐步在現實生活中累積成就感與自信心。</p>
+                        <a href="#" class="inline-block bg-manga-black text-white px-4 py-2 font-bold text-xs hover:bg-manga-yellow hover:text-black transition-colors manga-border border-2">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exhibition Banner Section -->
+    <section id="exhibition" class="py-16 bg-manga-yellow manga-border border-x-0 border-y-8 my-12 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMiIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC4yIi8+PC9zdmc+')]"></div>
+        <div class="max-w-7xl mx-auto px-4 md:px-8 relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 items-center justify-items-center md:justify-items-stretch">
+            <div class="gs-reveal justify-self-start">
+                <div class="inline-block bg-manga-white manga-border px-4 py-1 mb-4 font-bold transform -rotate-1">實體展出資訊</div>
+                <h2 class="text-5xl md:text-7xl font-display font-black uppercase text-manga-black mb-2">YODEX 2024</h2>
+                <h3 class="text-3xl font-bold mb-4">新一代設計展</h3>
+                <div class="flex items-center gap-2 font-bold text-xl bg-manga-black text-manga-white p-3 inline-flex">
+                    <iconify-icon icon="solar:calendar-bold-duotone" class="text-manga-yellow"></iconify-icon>
+                    5/22 - 5/25
+                </div>
+                <div class="flex items-start gap-2 font-bold text-xl mt-4">
+                    <iconify-icon icon="solar:map-point-bold-duotone" class="mt-1"></iconify-icon>
+                    <div>
+                        南港展覽館<br>
+                        <span class="text-sm text-manga-black bg-manga-white px-2 py-1 mt-1 inline-block manga-border border-2">P01 新一代設計產學合作邊界交換所</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gs-reveal w-full max-w-sm mx-auto transform -rotate-1">
+                <div class="manga-border p-2 bg-manga-white shadow-manga">
+                    <img src="https://storage.googleapis.com/tdri/yodex/2026/time_location/image_zh/4/image_d01c08.jpeg" alt="YODEX 展場地圖" class="w-full h-auto object-cover border-2 border-manga-black grayscale contrast-125">
+                </div>
+            </div>
+
+            <div class="manga-panel p-6 bg-manga-white max-w-sm transform rotate-2 gs-reveal text-center group justify-self-end w-full">
+                <iconify-icon icon="solar:camera-bold-duotone" class="text-6xl text-manga-yellow mb-4 group-hover:scale-110 transition-transform"></iconify-icon>
+                <h4 class="text-2xl font-black mb-2">免費拍貼活動</h4>
+                <p class="font-bold text-gray-600 mb-4">來到現場攤位，即可體驗化身漫畫主角的限定拍貼機！數量有限，敬請期待。</p>
+                <div class="text-sm font-black bg-manga-black text-manga-yellow py-2">我們在跨域類跨域組等你！</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Newsletter & Socials -->
+    <footer id="newsletter" class="bg-manga-white pt-24 pb-12 px-4 md:px-8 border-t-8 border-manga-black relative">
+        <div class="max-w-4xl mx-auto text-center gs-reveal">
+            <h2 class="text-4xl md:text-6xl font-display font-black uppercase mb-6">Join The Story</h2>
+            <p class="text-xl font-bold mb-2">APP 目前尚在熱烈開發中！</p>
+            <p class="text-gray-600 font-medium mb-10">歡迎關注我們的 IG 掌握最新進度，或輸入 Email 訂閱電子報，獲得第一手測試資格通知。</p>
+            
+            <form class="flex flex-col md:flex-row gap-4 justify-center max-w-2xl mx-auto mb-16" onsubmit="event.preventDefault(); alert('感謝訂閱！我們會將最新資訊發送給您。');">
+                <input type="email" placeholder="YOUR EMAIL ADDRESS..." required class="flex-1 bg-transparent manga-border px-6 py-4 font-bold text-lg focus:outline-none focus:bg-manga-yellow transition-colors placeholder-gray-400">
+                <button type="submit" class="magnetic-btn bg-manga-black text-manga-white font-display font-bold uppercase text-xl px-10 py-4 hover:bg-manga-yellow hover:text-manga-black manga-border border-manga-black transition-colors duration-300">
+                    Subscribe
+                </button>
+            </form>
+
+            <div class="flex justify-center items-center gap-6 mb-12">
+                <a href="#" class="text-manga-black hover:text-manga-yellow transition-colors hover:-translate-y-2 transform duration-300">
+                    <iconify-icon icon="simple-icons:instagram" width="40"></iconify-icon>
+                </a>
+                
+                <!-- 新增：YODEX 官網連結取代 YouTube Icon -->
+                <a href="#" class="text-manga-black hover:text-manga-yellow transition-colors hover:-translate-y-2 transform duration-300 flex items-center h-[40px]" title="前往 YODEX 線上展覽">
+                    <span class="font-display font-black text-3xl leading-none tracking-tighter">YODEX</span>
+                </a>
+
+                <a href="#" class="text-manga-black hover:text-manga-yellow transition-colors hover:-translate-y-2 transform duration-300">
+                    <iconify-icon icon="simple-icons:behance" width="40"></iconify-icon>
+                </a>
+            </div>
+            
+            <!-- 新增：加入聯絡信箱 -->
+            <div class="border-t-4 border-manga-black pt-8 flex flex-col md:flex-row justify-between items-center font-bold text-sm gap-4">
+                <p>&copy; 2024 LIFETOON. All rights reserved.</p>
+                <a href="mailto:wearelifetoon@gmail.com" class="hover:text-manga-yellow transition-colors flex items-center gap-2">
+                    <iconify-icon icon="solar:letter-bold" class="text-lg"></iconify-icon>
+                    wearelifetoon@gmail.com
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP & Anime.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <script>
+        // Register GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Custom Cursor Logic
+        const cursor = document.getElementById('cursor');
+        const cursorModifiers = document.querySelectorAll('a, button, .cursor-pointer, .magnetic-btn');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        cursorModifiers.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+        });
+
+        // Vertical Text Clipping Reveal (Hero)
+        window.addEventListener('load', () => {
+            gsap.to('.clip-text', {
+                y: '0%',
+                duration: 1,
+                ease: 'power4.out',
+                stagger: 0.15,
+                delay: 0.2
+            });
+        });
+
+        // Reveal Elements on Scroll
+        const revealElements = document.querySelectorAll('.gs-reveal');
+        revealElements.forEach((el) => {
+            gsap.fromTo(el, 
+                { autoAlpha: 0, y: 50 },
+                {
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    },
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power3.out"
+                }
+            );
+        });
+
+        // Magnetic Button Effect using Anime.js
+        const magneticBtns = document.querySelectorAll('.magnetic-btn');
+        magneticBtns.forEach(btn => {
+            btn.addEventListener('mousemove', function(e) {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                anime({
+                    targets: btn,
+                    translateX: x * 0.3,
+                    translateY: y * 0.3,
+                    scale: 1.05,
+                    duration: 100,
+                    easing: 'easeOutSine'
+                });
+            });
+
+            btn.addEventListener('mouseleave', function() {
+                anime({
+                    targets: btn,
+                    translateX: 0,
+                    translateY: 0,
+                    scale: 1,
+                    duration: 500,
+                    easing: 'easeOutElastic(1, .3)'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
