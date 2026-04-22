@@ -14,38 +14,11 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Tailwind Config for Manga Aesthetic -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        manga: {
-                            yellow: '#FFDF00',
-                            black: '#0A0A0A',
-                            white: '#FAFAFA',
-                            gray: '#E5E5E5'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['"Noto Sans TC"', 'sans-serif'],
-                        display: ['Oswald', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'manga': '8px 8px 0px 0px rgba(10,10,10,1)',
-                        'manga-sm': '4px 4px 0px 0px rgba(10,10,10,1)',
-                        'manga-hover': '12px 12px 0px 0px rgba(10,10,10,1)',
-                        'manga-right': '8px 0px 0px 0px rgba(10,10,10,1)',
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="tailwind-config.js"></script>
 
     <!-- Iconify -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-
+</head>
 <body class="antialiased selection:bg-manga-yellow selection:text-manga-black relative">
 
     <!-- Custom Cursor -->
@@ -75,8 +48,8 @@
             </div>
             
             <h1 class="text-5xl md:text-7xl lg:text-8xl font-black mb-8 leading-tight tracking-tight text-manga-black">
-                <div class="clip-container"><span class="clip-text">幻影的</span></div>
-                <div class="clip-container"><span class="clip-text text-transparent" style="-webkit-text-stroke: 2px #0A0A0A;">轉學生。</span></div>
+                <div class="clip-container"><span class="clip-text">轉學的</span></div>
+                <div class="clip-container"><span class="clip-text">第一天</span></div>
             </h1>
         </div>
 
@@ -85,10 +58,10 @@
             <div class="manga-panel bg-manga-white p-6 md:p-8 relative z-10">
                 <iconify-icon icon="solar:quote-left-bold" class="text-4xl text-manga-yellow absolute -top-4 -left-4 bg-manga-black rounded-full p-2 border-4 border-manga-white"></iconify-icon>
                 <p class="text-xl md:text-2xl font-bold leading-relaxed">
-                    在這個充滿未知的新環境，我只能低著頭，假裝自己是個透明人...直到那個不可思議的系統啟動。
+                    我也想要跟大家開開心心的聊天，但是不知道為甚麼話到嘴邊總是卡住...
                 </p>
                 <div class="mt-4 flex justify-end">
-                    <span class="text-sm font-bold bg-manga-gray px-2 py-1 manga-border border-2">SYSTEM LOG // 故事展開中</span>
+                    <span class="text-sm font-bold bg-manga-gray px-2 py-1 manga-border border-2">SYSTEM LOG // 故事進行中</span>
                 </div>
             </div>
             <!-- Decorative Manga Shadow Block -->
@@ -122,9 +95,7 @@
     <section class="px-4 md:px-8 max-w-6xl mx-auto pb-32">
         <div class="mb-8 flex items-end justify-between gs-reveal">
             <h2 class="text-4xl md:text-6xl font-display font-black uppercase text-manga-black">Story Files</h2>
-            <div class="w-1/2 h-2 bg-manga-black mb-2 hidden md:block relative">
-                <div class="absolute right-0 top-1/2 -translate-y-1/2 bg-manga-yellow px-2 font-bold text-xs">CONFIDENTIAL</div>
-            </div>
+            
         </div>
 
         <!-- Comic Grid Container -->
@@ -152,11 +123,12 @@
                         檔案：小文 (Wen)
                     </div>
                     <div class="space-y-4 mt-4 font-medium text-lg text-manga-black">
-                        <p><span class="font-bold bg-manga-black text-manga-white px-2 py-1 mr-2">特徵</span> 存在感極低的角落生物、社交能量極低</p>
-                        <p><span class="font-bold bg-manga-black text-manga-white px-2 py-1 mr-2">屬性</span> 內心戲豐富，渴望被理解卻害怕成為焦點</p>
+                        <p><span class="font-bold bg-manga-black text-manga-white px-2 py-1 mr-2">個人特質</span> 心思細膩、容易緊張、渴望連結</p>
+                        <p><span class="font-bold bg-manga-black text-manga-white px-2 py-1 mr-2">故事標籤</span> 心境剖析×人際關係</p>
                         <hr class="border-2 border-manga-black border-dashed my-4">
                         <p class="text-gray-600 leading-relaxed">
-                            這是一段假文字介紹。小文每天的日常就是試圖融入背景，她擁有豐富的內心世界，卻總是找不到適合的出口。轉學到新環境的她，面臨著極大的壓力與挑戰。直到她的手機裡，多了一個刪不掉的神秘 APP...
+                            小文過去一直是班上的小透明，個性低調、嗓門小，在同學眼中就是個話少的普通女孩，但大家都不知道的是，她內心其實也有個渴望與人交流、被看見的靈魂...<br><br>
+                            今天是小文轉學的第一天，她會遇到甚麼挑戰?又會做出什麼樣的行動呢？
                         </p>
                     </div>
                 </div>
@@ -175,15 +147,13 @@
                     
                     <div class="flex-1 bg-manga-white text-manga-black manga-border p-6 transform rotate-1 hover:rotate-0 transition-transform">
                         <h3 class="text-2xl md:text-3xl font-black mb-4 flex items-center gap-3">
-                            <iconify-icon icon="solar:book-bookmark-bold" class="text-manga-yellow"></iconify-icon>
-                            第一話：劇情綱要
+                            引導思考
                         </h3>
                         <p class="text-base md:text-lg font-medium leading-loose text-gray-800">
-                            【此處為測試用假字串】原本以為只是個平凡的早晨，小文深吸一口氣，踏入新教室的那一刻，手機卻突然震動了一下。畫面上出現了一隻奇怪的像素生物，自稱是『故事獸』。
-                            <br><br>
-                            「系統啟動：偵測到強烈社交焦慮邊緣人。」
-                            <br><br>
-                            這不是惡作劇遊戲，而是她人生的新篇章。在故事獸的引導下，小文接下了她人生中第一個真實世界副本任務：『在點名時直視老師的眼睛三秒鐘』。看似微不足道的一步，將如何在她的校園生活中掀起巨大的蝴蝶效應？
+                            
+                            ✦ 你是否也曾在踏入陌生的群體時，感到不知所措、心跳加快？<br>
+                            ✦ 當時的你，是選擇自信登場、靜靜觀察，還是悄悄退到一旁？<br>
+                            ✦ 如果有機會重來一次，你會想嘗試不同的劇本嗎？
                         </p>
                         
                         <div class="mt-6 flex justify-end">

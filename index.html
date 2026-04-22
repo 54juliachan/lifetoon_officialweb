@@ -14,33 +14,7 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Tailwind Config for Manga Aesthetic -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        manga: {
-                            yellow: '#FFDF00',
-                            black: '#0A0A0A',
-                            white: '#FAFAFA',
-                            gray: '#E5E5E5'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['"Noto Sans TC"', 'sans-serif'],
-                        display: ['Oswald', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'manga': '8px 8px 0px 0px rgba(10,10,10,1)',
-                        'manga-sm': '4px 4px 0px 0px rgba(10,10,10,1)',
-                        'manga-hover': '12px 12px 0px 0px rgba(10,10,10,1)',
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="tailwind-config.js"></script>
 
     <!-- Iconify -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
@@ -85,10 +59,9 @@
                     青少年自我認同探索 APP
                 </div>
                 
-                <h1 class="text-6xl md:text-8xl lg:text-9xl font-display font-black uppercase mb-6 leading-none">
-                    <div class="clip-container"><span class="clip-text">Write</span></div>
-                    <div class="clip-container"><span class="clip-text text-transparent" style="-webkit-text-stroke: 3px #0A0A0A;">Your</span></div>
-                    <div class="clip-container"><span class="clip-text">Story</span></div>
+                <h1 class="text-6xl md:text-7xl lg:text-8xl font-display font-black uppercase mb-6 leading-none">
+                    <div class="clip-container"><span class="clip-text">Be writer</span></div>
+                    <div class="clip-container"><span class="clip-text text-transparent" style="-webkit-text-stroke: 3px #0A0A0A;">Be reader</span></div>
                 </h1>
                 
                 <p class="text-2xl md:text-3xl font-bold mb-8 gs-reveal">
@@ -155,7 +128,7 @@
                 </div>
                 <div class="text-6xl font-display font-black text-manga-gray mb-4">03</div>
                 <h4 class="text-2xl font-bold mb-4 z-10">探索任務化<br>Quest & Identity</h4>
-                <p class="font-medium z-10 mt-auto">根據對話分析探索線索，將抽象的自我探索轉化為看得見的任務與成就。從對話中配對成長任務，累積自信與社交能力。</p>
+                <p class="font-medium z-10 mt-auto">在對話中挖掘線索，將抽象的自我探索轉化為看得見的任務與成就，在現實中實現自我成長。</p>
             </div>
         </div>
     </section>
@@ -167,7 +140,9 @@
         <div class="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
             <div class="text-center mb-20 gs-reveal">
                 <h2 class="text-6xl md:text-8xl font-display font-black uppercase text-transparent mb-4" style="-webkit-text-stroke: 2px #FFDF00;">Features</h2>
-                <div class="inline-block bg-manga-yellow text-manga-black font-bold px-6 py-2 text-2xl transform rotate-2">系統啟動中...</div>
+                <div class="inline-block bg-manga-yellow text-manga-black font-bold px-6 py-2 text-2xl transform mb-6">主角您好，歡迎來到漫畫的世界</div>
+                <p class="text-xl text-gray-300 font-medium mb-10">在這裡，你的日常將不再平凡，而是正在被描繪的故事。<br>
+                    你每一天的情緒、選擇與小小的行動，都會影響劇情的下一步走向。準備好了嗎？篇章即將展開——</p>
             </div>
 
             <div class="space-y-24">
@@ -176,12 +151,12 @@
                     <div class="order-2 md:order-1 gs-reveal">
                         <div class="flex items-center gap-4 mb-4">
                             <iconify-icon icon="solar:ghost-bold" class="text-4xl text-manga-yellow"></iconify-icon>
-                            <h3 class="text-4xl font-bold">內心的小怪獸：故事獸</h3>
+                            <h3 class="text-4xl font-bold">成為漫畫的主角</h3>
                         </div>
-                        <p class="text-xl mb-6 text-gray-300">將個人特質形象化。「故事獸」以故事為食，與人類共生。隨著你紀錄的故事越多，牠們會長出與你心理傾向相符的特徵（顏色、斑點），成為你最忠實的倒影。</p>
+                        <p class="text-xl mb-6 text-gray-300">AI 每日定時陪伴，引導青少年回顧當天的經歷，並將片段轉化為專屬漫畫。在記憶回溯與視角轉換中，達成深度自我覺察。</p>
                         <ul class="space-y-2 font-bold text-manga-yellow">
-                            <li>✦ 定時餵食故事果實培養感情</li>
-                            <li>✦ 許願餐點推動劇情火花</li>
+                            <li>✦ 寫自己的故事－依據每日回報內容生成個人化漫畫劇情</li>
+                            <li>✦ 做自己的讀者－以讀者視角重新理解經歷、想法與情緒</li>
                         </ul>
                     </div>
                     <div class="order-1 md:order-2 manga-panel p-2 transform rotate-2 gs-reveal bg-manga-white">
@@ -197,28 +172,28 @@
                     <div class="gs-reveal">
                         <div class="flex items-center gap-4 mb-4">
                             <iconify-icon icon="solar:map-arrow-up-bold" class="text-4xl text-manga-yellow"></iconify-icon>
-                            <h3 class="text-4xl font-bold">抽絲剝繭：願望菜單</h3>
+                            <h3 class="text-4xl font-bold">內心的小怪獸：故事獸</h3>
                         </div>
-                        <p class="text-xl mb-6 text-gray-300">看見的成就，重新定義成功。AI 分析對話找出探索線索，將挑戰變成破關任務。例如：「練習說話時與人對視10秒」，將你的迷惘轉化為行動。</p>
+                        <p class="text-xl mb-6 text-gray-300">「故事獸」以故事為食，與人類共生。隨著每天持續紀錄日常、餵食故事，會逐漸長出貼近心理傾向的特徵（如顏色、紋路），成為映照內心狀態的獨特存在。</p>
                         <div class="bg-zinc-900 border-l-4 border-manga-yellow p-4 text-sm font-mono mt-4">
-                            > SYSTEM: 發現社交焦慮跡象...<br>
-                            > 生成任務 [果實：閱讀10則冷笑話]<br>
-                            > 狀態：等待接受
+                            ✦ 個人特質與情感狀態具象化<br>
+                            ✦ 定時餵食故事果實培養感情<br>
+                            ✦ 穿插出現於日常漫畫中，反映青少年心境
+
                         </div>
                     </div>
                 </div>
                 
-                <!-- 新增功能介紹 C (佔位符) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <div class="order-2 md:order-1 gs-reveal">
                         <div class="flex items-center gap-4 mb-4">
                             <iconify-icon icon="solar:star-fall-2-bold" class="text-4xl text-manga-yellow"></iconify-icon>
-                            <h3 class="text-4xl font-bold">全新功能探索區塊一</h3>
+                            <h3 class="text-4xl font-bold">抽絲剝繭：願望菜單</h3>
                         </div>
-                        <p class="text-xl mb-6 text-gray-300">這是一段暫時的替代文字，用來展示未來即將新增的功能介紹內容。可以想像這裡有一段非常吸引人的描述，詳細解說這項新功能的獨特之處與使用者情境。</p>
+                        <p class="text-xl mb-6 text-gray-300">透過日常分析潛在線索，將自我探索轉化為魔獸的「願望菜單」。以輕量化任務，引導青少年在行動中逐步認識自己，累積可被看見的成就。</p>
                         <ul class="space-y-2 font-bold text-manga-yellow">
-                            <li>✦ 預期新增的功能亮點說明一</li>
-                            <li>✦ 預期新增的功能亮點說明二</li>
+                            <li>✦ 許願餐點推動劇情火花</li>
+                            <li>✦ 達成任務提升魔獸好感度、解鎖魔法力量</li>
                         </ul>
                     </div>
                     <div class="order-1 md:order-2 manga-panel p-2 transform rotate-2 gs-reveal bg-manga-white">
@@ -226,7 +201,6 @@
                     </div>
                 </div>
 
-                <!-- 新增功能介紹 D (佔位符) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <div class="manga-panel p-2 transform -rotate-2 gs-reveal bg-manga-white">
                         <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Placeholder Feature 2" class="w-full aspect-[4/3] object-cover">
@@ -234,13 +208,13 @@
                     <div class="gs-reveal">
                         <div class="flex items-center gap-4 mb-4">
                             <iconify-icon icon="solar:magic-stick-3-bold" class="text-4xl text-manga-yellow"></iconify-icon>
-                            <h3 class="text-4xl font-bold">全新功能探索區塊二</h3>
+                            <h3 class="text-4xl font-bold">間接交流，讓心更靠近</h3>
                         </div>
-                        <p class="text-xl mb-6 text-gray-300">這是第二段暫時的替代文字。當有正式內容與圖片時，便可以直接替換這裡的資訊。延續交錯排版的方式，能保持網頁閱讀的節奏感與視覺趣味性。</p>
+                        <p class="text-xl mb-6 text-gray-300">開通親子帳號，透過與魔獸的共同互動，自然創造對話契機、建立理解與連結，用溫柔相伴形塑穩定而健康的自我認同</p>
                         <div class="bg-zinc-900 border-l-4 border-manga-yellow p-4 text-sm font-mono mt-4">
-                            > SYSTEM: 隱藏功能建置中...<br>
-                            > 載入進度：[████░░░░░░] 40%<br>
-                            > 狀態：等待資料更新
+                            ✦ 魔獸狀態隱喻青少年當下的身心變化<br>
+                            ✦ 親友投餵零食：轉化他人視角的故事、共享回憶與獨特經歷<br>
+                            
                         </div>
                     </div>
                 </div>
@@ -386,7 +360,7 @@
         <div class="max-w-7xl mx-auto px-4 md:px-8 relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8 items-center justify-items-center md:justify-items-stretch">
             <div class="gs-reveal justify-self-start">
                 <div class="inline-block bg-manga-white manga-border px-4 py-1 mb-4 font-bold transform -rotate-1">實體展出資訊</div>
-                <h2 class="text-5xl md:text-7xl font-display font-black uppercase text-manga-black mb-2">YODEX 2024</h2>
+                <h2 class="text-5xl md:text-7xl font-display font-black uppercase text-manga-black mb-2">YODEX 2026</h2>
                 <h3 class="text-3xl font-bold mb-4">新一代設計展</h3>
                 <div class="flex items-center gap-2 font-bold text-xl bg-manga-black text-manga-white p-3 inline-flex">
                     <iconify-icon icon="solar:calendar-bold-duotone" class="text-manga-yellow"></iconify-icon>
@@ -395,7 +369,7 @@
                 <div class="flex items-start gap-2 font-bold text-xl mt-4">
                     <iconify-icon icon="solar:map-point-bold-duotone" class="mt-1"></iconify-icon>
                     <div>
-                        南港展覽館<br>
+                        南港展覽館二館<br>
                         <span class="text-sm text-manga-black bg-manga-white px-2 py-1 mt-1 inline-block manga-border border-2">P01 新一代設計產學合作邊界交換所</span>
                     </div>
                 </div>
@@ -403,7 +377,7 @@
             
             <div class="gs-reveal w-full max-w-sm mx-auto transform -rotate-1">
                 <div class="manga-border p-2 bg-manga-white shadow-manga">
-                    <img src="https://storage.googleapis.com/tdri/yodex/2026/time_location/image_zh/4/image_d01c08.jpeg" alt="YODEX 展場地圖" class="w-full h-auto object-cover border-2 border-manga-black grayscale contrast-125">
+                    <img src="img\map.jpeg" alt="YODEX 展場地圖" class="w-full h-auto object-cover border-2 border-manga-black grayscale contrast-125">
                 </div>
             </div>
 
@@ -435,7 +409,6 @@
                     <iconify-icon icon="simple-icons:instagram" width="40"></iconify-icon>
                 </a>
                 
-                <!-- 新增：YODEX 官網連結取代 YouTube Icon -->
                 <a href="#" class="text-manga-black hover:text-manga-yellow transition-colors hover:-translate-y-2 transform duration-300 flex items-center h-[40px]" title="前往 YODEX 線上展覽">
                     <span class="font-display font-black text-3xl leading-none tracking-tighter">YODEX</span>
                 </a>
@@ -447,7 +420,7 @@
             
             <!-- 新增：加入聯絡信箱 -->
             <div class="border-t-4 border-manga-black pt-8 flex flex-col md:flex-row justify-between items-center font-bold text-sm gap-4">
-                <p>&copy; 2024 LIFETOON. All rights reserved.</p>
+                <p>&copy; 2026 LIFETOON. All rights reserved.</p>
                 <a href="mailto:wearelifetoon@gmail.com" class="hover:text-manga-yellow transition-colors flex items-center gap-2">
                     <iconify-icon icon="solar:letter-bold" class="text-lg"></iconify-icon>
                     wearelifetoon@gmail.com
